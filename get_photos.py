@@ -14,7 +14,6 @@ if __name__ == "__main__":
 
     data = pd.read_csv(INPUT_FILE, sep="\t", header=0)
     urls = list(data["photo_image_url"])
-    urls = urls[:1000]
 
     for url in tqdm(urls, desc="Downloading"):
         req = requests.get(url)
