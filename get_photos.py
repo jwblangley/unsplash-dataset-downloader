@@ -12,13 +12,19 @@ if __name__ == "__main__":
         print(f'No "{OUTPUT_DIR}/" directory found. Creating directory')
         os.mkdir(OUTPUT_DIR)
 
+    existing_names = [x.split(".")[0] for x in os.listdir(OUTPUT_DIR)]
+
     data = pd.read_csv(INPUT_FILE, sep="\t", header=0)
     urls = list(data["photo_image_url"])
 
     for url in tqdm(urls, desc="Downloading"):
+        name = url.split("/")[-1]
+        if name in existing_names:
+            print(f"{name} already downloaded. Skipping")
+            continue
+
         req = requests.get(url)
 
-        name = url.split("/")[-1]
         ct = req.headers.get("content-type")
         ext = ct.split("/")[-1]
 
