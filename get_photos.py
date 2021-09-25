@@ -4,6 +4,8 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
+from urllib3.exceptions import LocationParseError
+
 INPUT_FILE = "photos.tsv"
 OUTPUT_DIR = "out"
 
@@ -23,7 +25,11 @@ if __name__ == "__main__":
             print(f"{name} already downloaded. Skipping")
             continue
 
-        req = requests.get(url)
+        try:
+            req = requests.get(url)
+        except LocationParseError:
+            print(f"Failed to download {url}. Skipping")
+            continue
 
         ct = req.headers.get("content-type")
         ext = ct.split("/")[-1]
